@@ -71,7 +71,7 @@
                                     <td>
                                         <div class="demo-spacing d-flex">
                                             <button onclick="location.href=``" class="btn btn-sm btn-info">
-                                                <span class="tf-icons bx bx-show bx-18px"></span>
+                                                <span class="tf-icons bx bx-edit bx-18px"></span>
                                             </button>
                                             &nbsp;
                                             <form action="{{ route('jenis-makanan.destroy', $jm->id) }}" method="post">
@@ -126,6 +126,8 @@
 <!-- script untuk menampilkan form inline -->
 <script>
     let count = 0
+
+    // JavaScript to handle inline form addition
     document.getElementById('tambahJenisMakanan').addEventListener('click', function() {
         const tableBody = document.getElementById('listJenis');
 
@@ -133,6 +135,7 @@
             return
         }
 
+        // Create a new row with an inline form
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
        
@@ -157,11 +160,12 @@
         
         `;
 
+        // Append the new row to the table body
         tableBody.appendChild(newRow);
 
 
         count += 1
-
+        // Handle batal action
         document.getElementById('batal').addEventListener('click', function() {
             tableBody.removeChild(newRow);
 

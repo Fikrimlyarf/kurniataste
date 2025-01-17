@@ -45,7 +45,7 @@ class UserController extends Controller
         $user->status = $request->has('status') ? 1 : 0;
         $user->save();
 
-        session()->flash('success', 'Data berhasil disimpan');
+        session()->flash('success', 'Data berhasil ditambahkan');
 
         return redirect()->route('user.index');
     }

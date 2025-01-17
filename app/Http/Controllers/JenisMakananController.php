@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JenisMakanan;
+use Exception;
 use Illuminate\Http\Request;
 
 class JenisMakananController extends Controller
@@ -42,8 +43,8 @@ class JenisMakananController extends Controller
         $jenisMakanan->nama_jenis_makanan = $request->nama_jenis_makanan;
         $jenisMakanan->save();
 
-        session()->flash('success', 'Data jenis makanan berhasil disimpan');
-
+        // dd($request->all());
+        session()->flash('success', 'Data jenis makanan berhasil ditambahkan');
         return to_route('jenis-makanan.index');
     }
 
@@ -60,7 +61,12 @@ class JenisMakananController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
+        $jenisMakanan = JenisMakanan::find($id);
+        dd($jenisMakanan);
+        
+        return redirect()->route('jenis-makanan.index',  compact('jenisMakanan'));
+
     }
 
     /**
@@ -68,7 +74,11 @@ class JenisMakananController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // $jenisMakanan = JenisMakanan::find($id);
+        // $jenisMakanan->nama_jenis_makanan = $request->nama_jenis;
+        // $jenisMakanan->update();
+        // session()->flash('success', 'Data jenis makanan berhasil diupdate');
+        // return to_route('jenis-makanan.index');
     }
 
     /**

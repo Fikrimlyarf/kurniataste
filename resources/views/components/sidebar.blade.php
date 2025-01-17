@@ -49,7 +49,7 @@
             </ul>
         </li>
         <li class="menu-item">
-            <a href="toping" class="menu-link">
+            <a href="{{ url('topping') }}" class="menu-link">
                 <i class="fa-solid fa-cookie"></i>
                 <div data-i18n="topping" style="margin-left: 18px;">Topping</div>
             </a>

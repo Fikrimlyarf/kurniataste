@@ -62,76 +62,78 @@
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
+
+                                        <tbody id="listJenis">
+                                            @foreach($jenisMakanan as $no=>$jm)
+                                            <tr id="row-{{ $jm->id }}">
+                                                <th scope="row">{{ $no+1 }}</th>
+                                                <td>{{ $jm->nama_jenis_makanan }}</td>
+                                                <td>
+                                                    <div class="demo-spacing d-flex">
+                                                        <button class="btn btn-sm btn-info" onclick="editRow('{{ $jm->id }}', '{{ $jm->nama_jenis_makanan }}')">
+                                                            <span class="tf-icons bx bx-edit bx-18px"></span>
+                                                        </button>
+                                                        &nbsp;
+                                                        <!-- <form action="{{ route('jenis-makanan.destroy', $jm->id) }}" method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-sm btn-danger">
+                                                                <span class="tf-icons bx bx-trash bx-18px"></span>
+                                                            </button>
+                                                        </form> -->
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </form>
-                            <tbody id="listJenis">
-                                @foreach($jenisMakanan as $no=>$jm)
-                                <tr>
-                                    <th scope="row">{{ $no+1 }}</th>
-                                    <td>{{ $jm->nama_jenis_makanan }}</td>
-                                    <td>
-                                        <div class="demo-spacing d-flex">
-                                            <button onclick="location.href=``" class="btn btn-sm btn-info">
-                                                <span class="tf-icons bx bx-edit bx-18px"></span>
-                                            </button>
-                                            &nbsp;
-                                            <form action="{{ route('jenis-makanan.destroy', $jm->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-danger">
-                                                    <span class="tf-icons bx bx-trash bx-18px"></span>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            </table>
-                        </div>
 
-                        <!-- Pagination -->
-                        <div class="card-footer d-flex justify-content-end">
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination">
-                                    <li class="page-item prev">
-                                        <a class="page-link" href="?page={{ $jenisMakanan->currentPage() -1 }} "><i class="tf-icon bx bx-chevrons-left bx-sm"></i></a>
-                                    </li>
-                                    <li class="page-item next">
-                                        <a class="page-link" href="?page={{ $jenisMakanan->currentPage() +1 }}"><i class="tf-icon bx bx-chevrons-right bx-sm"></i></a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- / Pagination -->
+                            <!-- Pagination -->
+                            <div class="card-footer d-flex justify-content-end">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        <li class="page-item prev">
+                                            <a class="page-link" href="?page={{ $jenisMakanan->currentPage() -1 }} "><i class="tf-icon bx bx-chevrons-left bx-sm"></i></a>
+                                        </li>
+                                        <li class="page-item next">
+                                            <a class="page-link" href="?page={{ $jenisMakanan->currentPage() +1 }}"><i class="tf-icon bx bx-chevrons-right bx-sm"></i></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- / Pagination -->
+
+                        </div>            
+                        <!-- / Content -->
                     </div>
+
+                    <x-footer></x-footer>
+
+                    <div class="content-backdrop fade"></div>
                 </div>
-                <!-- / Content -->
-
-                <x-footer></x-footer>
-
-                <div class="content-backdrop fade"></div>
             </div>
         </div>
-    </div>
-    <div class="layout-overlay layout-menu-toggle"></div>
+        <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 
     <x-script></x-script>
 
-    <form action="" method="post"></form>
+    <!-- <form action="" method="post"></form> -->
 
 </body>
 
 
-<!-- script untuk menampilkan form inline -->
+<!-- script untuk menampilkan tambah form inline -->
 <script>
-    let count = 0
+    let add = 0
 
     // JavaScript to handle inline form addition
     document.getElementById('tambahJenisMakanan').addEventListener('click', function() {
         const tableBody = document.getElementById('listJenis');
 
-        if (count == 1) {
+        if (add == 1) {
             return
         }
 
@@ -164,18 +166,106 @@
         tableBody.appendChild(newRow);
 
 
-        count += 1
+        add += 1
         // Handle batal action
         document.getElementById('batal').addEventListener('click', function() {
             tableBody.removeChild(newRow);
 
-            count = 0
+            add = 0
         });
 
 
     });
 </script>
+<!-- /end script untuk menampilkan tambah form inline  -->
 
-<!-- /script untuk menampilkan form inline  -->
+<!-- script untuk menampilkan ubah form inline -->
+<script>
+    let currentEdit = null; // Variable to track the currently editing row
+
+    function editRow(id, namaJenisMakanan) {
+        // Close any row currently in edit mode
+        if (currentEdit !== null) {
+            cancelEdit(currentEdit, document.getElementById(`namaJenisMakanan-${currentEdit}`).getAttribute('data-original'));
+        }
+
+        // Update the currently editing row ID
+        currentEdit = id;
+
+        const row = document.getElementById(`row-${id}`);
+
+        // Clear the existing row content and insert an inline form
+        row.innerHTML = `
+            <th scope="row">${id}</th>
+            <td>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    name="nama_jenis_makanan"
+                    id="namaJenisMakanan-${id}" 
+                    value="${namaJenisMakanan}" 
+                    data-original="${namaJenisMakanan}" />
+            </td>
+            <td>
+                <button class="btn btn-success btn-sm" type="button" onclick="saveRow(${id})">
+                    Simpan
+                </button>
+                <button class="btn btn-danger btn-sm" type="button" onclick="cancelEdit(${id}, '${namaJenisMakanan}')">
+                    Batal
+                </button>
+            </td>
+        `;
+    }
+
+    function saveRow(id) {
+        const inputField = document.getElementById(`namaJenisMakanan-${id}`);
+        const updatedName = inputField.value;
+
+        // Add your logic to send the updated data to the server (e.g., AJAX)
+        console.log('Updated name for ID', id, ':', updatedName);
+
+        // Replace the inline form with the updated data
+        const row = document.getElementById(`row-${id}`);
+        row.innerHTML = `
+            <th scope="row">${id}</th>
+            <td>${updatedName}</td>
+            <td>
+                <div class="demo-spacing d-flex">
+                    <button class="btn btn-sm btn-info" onclick="editRow(${id}, '${updatedName}')">
+                        <span class="tf-icons bx bx-edit bx-18px"></span>
+                    </button>
+                    &nbsp;
+                </div>
+            </td>
+        `;
+
+        // Clear the currently editing row ID
+        currentEdit = null;
+    }
+
+    function cancelEdit(id, originalName) {
+        // Restore the original row content
+        const row = document.getElementById(`row-${id}`);
+        row.innerHTML = `
+            <th scope="row">${id}</th>
+            <td>${originalName}</td>
+            <td>
+                <div class="demo-spacing d-flex">
+                    <button class="btn btn-sm btn-info" onclick="editRow(${id}, '${originalName}')">
+                        <span class="tf-icons bx bx-edit bx-18px"></span>
+                    </button>
+                    &nbsp;
+                </div>
+            </td>
+        `;
+
+        // Clear the currently editing row ID
+        currentEdit = null;
+    }
+</script>
+
+<!-- /end script untuk menampilkan ubah form inline -->
+
+
 
 </html>
